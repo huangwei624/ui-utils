@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport"
+		content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>验证码demo</title>
+	<link rel="stylesheet" type="text/css" href="css/verify.css">
+	<style>
+		.cerify-code-panel{
+			display: flex !important;
+		}
+		.verify-input-area{
+
+		}
+		.verify-code{
+
+		}
+	</style>
+</head>
+
+<body>
+	<div style="width:100%; display: flex; justify-content: space-around; align-items: center;">
+		<div>
+			<h3>普通验证码</h3>
+			<div id="mpanel1"></div>
+			<button type="button" id="check-btn" class="verify-btn">确定</button><br><br>
+		</div>
+		<div>
+			<h3>滑动验证码</h3>
+			<div id="mpanel2" style="margin-top:50px;"> </div>
+		</div>
+		<div>
+			<h3>点选验证码</h3>
+			<div id="mpanel3" style="margin-top:50px;"> </div>
+		</div>
+	</div>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/verify.js"></script>
+	<script>
+		// 普通验证码
+		$('#mpanel1').codeVerify({
+			type: 1,
+			width: '200px',
+			height: '35px',
+			fontSize: '24px',
+			codeLength: 6,
+			btnId: 'check-btn',
+			ready: function () {
+			},
+			success: function () {
+				alert('验证匹配！');
+			},
+			error: function () {
+				alert('验证码不匹配！');
+			}
+		});
+
+	// 	left: 147.635px;
+    // position: absolute;
+    // top: 16.1333px;
+		// 滑动验证码
+		$('#mpanel2').slideVerify({
+			type: 3,		//类型
+			vOffset: 5,	//误差量，根据需求自行调整
+			vSpace: 5,	//间隔
+			imgName: ['1.jpg', '2.jpg'],
+			imgSize: {
+				width: '400px',
+				height: '200px',
+			},
+			blockSize: {
+				width: '40px',
+				height: '40px',
+			},
+			barSize: {
+				width: '400px',
+				height: '40px',
+			},
+			ready: function () {
+			},
+			success: function () {
+				
+			},
+			error: function () {
+				
+			}
+
+		});
+
+		// 点选验证码
+		$('#mpanel3').pointsVerify({
+			defaultNum: 4,	//默认的文字数量
+			checkNum: 2,	//校对的文字数量
+			vSpace: 5,	//间隔
+			imgName: ['1.jpg', '2.jpg'],
+			imgSize: {
+				width: '600px',
+				height: '200px',
+			},
+			barSize: {
+				width: '600px',
+				height: '40px',
+			},
+			ready: function () {
+			},
+			success: function () {
+				//alert('验证成功，添加你自己的代码！');
+			},
+			error: function () {
+				alert('验证失败！');
+			}
+
+		});
+	</script>
+</body>
+
+</html>
