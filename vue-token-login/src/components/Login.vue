@@ -6,31 +6,31 @@
                 <div class="form-group">
                     <label for="firstname" class="col-sm-3 control-label">用户名：</label>
                     <div class="col-sm-8">
-                        <input type="text" v-model="username" class="form-control" id="firstname" placeholder="请输入用户名" />
+                        <input type="text" v-model="username" class="form-control" placeholder="请输入用户名" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="lastname" class="col-sm-3 control-label">密码：</label>
                     <div class="col-sm-8">
-                        <input type="text" v-model="password" class="form-control" id="lastname" placeholder="请输入密码" />
+                        <input type="text" v-model="password" class="form-control" placeholder="请输入密码" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="lastname" class="col-sm-3 control-label">验证码：</label>
                     <div class="col-sm-5">
-                        <input type="text" v-model="verify" class="form-control" id="lastname" placeholder="请输入验证码" />
+                        <input type="text" v-model="verifyCode" class="form-control" placeholder="请输入验证码" />
                     </div>
                     <div class="col-sm-3"  style="margin-left:-30px">
-                        <Sidentify :contentWidth="contentWidth"></Sidentify>
+                        <Sidentify :contentWidth="contentWidth" :identifyCode="identifyCode" @getVerifyCode="getVerifyCode"></Sidentify>
                     </div>
                 </div>
                 
                 <div class="form-group" style="padding: 0 10px">
                     <div class="col-sm-6">
-                        <button type="submit" style="width:100%" @click="login" class="btn btn-primary">登录</button>
+                        <button type="button" style="width:100%" @click="login" class="btn btn-primary">登录</button>
                     </div>
                     <div class="col-sm-6">
-                        <button type="submit" style="width:100%" @click="registe" class="btn btn-primary">注册</button>
+                        <button type="button" style="width:100%" @click="registe" class="btn btn-primary">注册</button>
                     </div>
                 </div>
             </form>
@@ -47,9 +47,10 @@ export default {
             offsetHeight:0, 
             offsetWidth:0,
             contentWidth: 95, // 验证码宽度 
+            identifyCode: '', // 验证码
             username: '',
             password: '',
-            verify: '',
+            verifyCode: '',
         };
     },
     created() {
@@ -57,14 +58,39 @@ export default {
         this.offsetWidth = document.body.offsetWidth; // 宽度
     },
     mounted() {
+        var token = localStorage.getItem("token")
+        if(token != null && token != ''){
+            this.$router.push("/index").catch(err => {err});
+            return
+        }
+        this.getVerifyCode();
     },
     methods: {
         login(){
-
+            this.$http.post(this.baseHttp+"/login",{"username":this.username, "password":this.password, "verifyCode":this.verifyCode}).then(res => {
+                if(res.data.status == 1) 
+                {
+                    var token = res.data.message;
+                    localStorage.setItem("token", token)
+                    this.$router.push({path:"/index"}).catch(err => {err})
+                }
+                else{
+                    alert(res.data.message);
+                }
+                console.log(this.identifyCode)
+            })
         },
         registe(){
-            this.$router.push({path:"/registe"});
-        }
+            this.$router.push({path:"/registe"}).catch(err => {err})
+        },
+        // 获取验证码
+        getVerifyCode(){
+            this.$http.get(this.baseHttp+"/verifyCode").then(res => {   // 95CD0D49C0C377522BDB0CE748577E04
+                if(res.data.status == 1){
+                    this.identifyCode = res.data.message;
+                }
+            })
+        },
     },
     components: {
         Sidentify

@@ -1,5 +1,5 @@
 <template>
-    <div class="s-canvas">
+    <div class="s-canvas" @click="$emit('getVerifyCode')">
         <canvas id="s-canvas" :width="contentWidth" :height="contentHeight"></canvas>
     </div>
 </template>

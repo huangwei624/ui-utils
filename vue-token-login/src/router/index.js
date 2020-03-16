@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/Login.vue'
-import Registe from '../components/Registe.vue'
 
 Vue.use(VueRouter)
 
@@ -20,20 +19,31 @@ const routes = [
   {
     path: '/registe',
     name: 'Registe',
-    component: Registe
+    component: () => import('../components/Registe.vue')
   },
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import('../views/About.vue')
-  // }
+  {
+    path: '/index',
+    name: 'Index',
+    component: () => import('../components/Index.vue')
+  },
 ]
 
 const router = new VueRouter({
   routes
 })
+
+// 配置导航守卫
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login' || to.path=="/registe") {
+    next();
+  } else {
+    var token = localStorage.getItem('token');
+    if (token == null || token == '') {
+      next("/login");
+    } else {
+      next();
+    }
+  }
+});
 
 export default router
