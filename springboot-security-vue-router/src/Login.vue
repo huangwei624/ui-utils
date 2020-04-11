@@ -33,8 +33,8 @@
         data(){
             return {
                 form: {
-                    username: "",
-                    password: "",
+                    username: "admin",
+                    password: "123456",
                     verifyCode: "",
                 },
                 verifyCodeUrl: this.$appConfig.base_url+"/verifyCode?time="+new Date(),
@@ -47,10 +47,24 @@
         mounted(){},
         methods: {
             login(){
-                
-                this.$http.post(this.$appConfig.base_url+"/login", this.$qs.stringify(this.form)).then(res => {
+                // var loading= this.$loading({
+                //     lock: true,
+                //     text: '正在登录',
+                //     spinner: 'el-icon-loading',
+                //     background: 'rgba(0, 0, 0, 0.7)'
+                // });
+                this.$post("/login", this.$qs.stringify(this.form)).then(res => {
                     console.log(res)
-                    alert(res)
+                    // loading.close();        // 关闭加载框
+                    var status = res.data.status;
+                    if(status == 1){
+                        this.$message({type:'success', message: "登录成功"})
+                        window.sessionStorage.setItem("user", JSON.stringify(res.data.data.principal))
+                        var path = this.$route.query.redirect;
+                        path == null || path == undefined ? this.$router.push("/home") : this.$router.push(path)
+                    }else(
+                        this.$message({type:'error', message: res.data.message})
+                    )
                 })
             },
             getVerifyCode(){

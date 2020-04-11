@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from "./router.js"
-import axios from 'axios'
 import AppConfig from "@/assets/config.js"
 import qs from 'qs'
+import {post, get} from "@/utils/axios-api.js"
 
 import {
   Button,
@@ -99,17 +99,29 @@ Vue.use(Form);
 Vue.use(Tag);
 Vue.prototype.$alert = MessageBox.alert
 Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$message = Message;
 Vue.prototype.$appConfig = AppConfig
-Vue.prototype.$http = axios
+Vue.prototype.$post = post
+Vue.prototype.$get = get
 Vue.prototype.$qs = qs
-
-// 请求携带cookie，保证sessionn 一致性
-axios.defaults.withCredentials = true
-//axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 
 Vue.config.productionTip = false
 
-new Vue({
+// 前置导航守卫
+router.beforeEach((to, from, next) => {
+  if (to.path == '/') {   // 访问登录页，直接放行
+      next();
+  } else {
+      // 当前用户是否已经认证，如果认证了初始化菜单,否则跳转到登陆页，并记录重定向参数
+      if (window.sessionStorage.getItem("user")) { 
+          next();
+      } else {
+          next('/?redirect=' + to.path);
+      }
+  }
+})
+
+export default new Vue({
   render: h => h(App),
   router
 }).$mount('#app')
