@@ -19,8 +19,11 @@
                 </div>
             </el-header>
             <el-container>
-                <el-aside width="206px">
+                <el-aside :width="asideWidth" ref="aside">
+                    <i :class="collapseIconClass" :style="collapseIconStyle" @click="setCollapse"></i>
                     <el-menu
+                        ref="menu"
+                        :collapse="isCollapse"
                         default-active="1-1"
                         unique-opened
                         router
@@ -77,13 +80,17 @@
     export default {
         data() {
             return {
-                username: ""
+                username: "",
+                isCollapse: false,
+                asideWidth: "206px",
+                collapseIconClass: 'el-icon-s-fold nav-collapse',
+                collapseIconStyle: {left: '176px'}
             };
         },
         created() {
             this.getUsername()
         },
-        mounted() {},
+        mounted() { },
         methods: {
             getUsername(){
                 var userinfo = window.sessionStorage.getItem("user");
@@ -103,6 +110,18 @@
                             }
                         })  
                     })
+                }
+            },
+            setCollapse(){
+                this.isCollapse = !this.isCollapse;
+                if(this.isCollapse){
+                    this.asideWidth = "65px"
+                    this.collapseIconClass = 'el-icon-s-unfold nav-collapse'
+                    this.collapseIconStyle = {left: '35px'}
+                }else{
+                    this.asideWidth = "206px"
+                    this.collapseIconClass = 'el-icon-s-fold nav-collapse'
+                    this.collapseIconStyle = {left: '176px'}
                 }
             }
         },
@@ -162,5 +181,12 @@
 .title{
     display: flex;
     align-items: center;
+}
+
+.nav-collapse{
+    font-size: 30px;
+    position:absolute;
+    bottom: 0px;
+    /* left: 176px; */
 }
 </style>

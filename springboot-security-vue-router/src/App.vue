@@ -27,4 +27,10 @@
       display: block !important;
       width: 17px !important;
     }
+
+    /* element-ui 折叠框 */
+    .el-collapse-item__header {
+      padding-left: 10px;
+    }
+
 </style>

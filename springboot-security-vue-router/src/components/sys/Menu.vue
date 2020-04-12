@@ -183,7 +183,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="updateDialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="updateMenu">确 定 更新</el-button>
+                <el-button type="primary" @click="updateMenu">确 定 更 新</el-button>
             </div>
         </el-dialog>
         <!-- <div style="display: flex; justify-content: flex-end; margin-top:15px">
