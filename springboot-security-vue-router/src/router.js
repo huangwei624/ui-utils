@@ -15,6 +15,7 @@ import MaterialM from "@/components/info/MaterialM.vue"
 import Notify from "@/components/info/Notify.vue"
 import Role from "@/components/sys/Role.vue"
 import Menu from "@/components/sys/Menu.vue"
+import User from "@/components/sys/User.vue"
 
 Vue.use(VueRouter)
 
@@ -76,6 +77,10 @@ export default new VueRouter({
                 {
                     path: "/sys/menu",
                     component: Menu
+                },
+                {
+                    path: "/sys/user",
+                    component: User
                 },
             ]
         },

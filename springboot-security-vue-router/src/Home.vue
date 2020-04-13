@@ -19,7 +19,7 @@
                 </div>
             </el-header>
             <el-container>
-                <el-aside :width="asideWidth" ref="aside">
+                <!-- <el-aside :width="asideWidth" ref="aside">
                     <i :class="collapseIconClass" :style="collapseIconStyle" @click="setCollapse"></i>
                     <el-menu
                         ref="menu"
@@ -65,6 +65,26 @@
                             <el-menu-item index="4-2" :route="'/sys/menu'">菜单管理</el-menu-item>
                         </el-submenu>
                     </el-menu>
+                </el-aside> -->
+                <el-aside :width="asideWidth" ref="aside">
+                    <i :class="collapseIconClass" :style="collapseIconStyle" @click="setCollapse"></i>
+                    <el-menu
+                        ref="menu"
+                        :collapse="isCollapse"
+                        default-active="1-1"
+                        unique-opened
+                        router
+                        class="el-menu-vertical-demo"
+                        background-color="#545c64">
+                        <el-submenu :index="index+''" v-for="(item, index) in routers" :key="index">
+                            <template slot="title">
+                                <i :class="item.iconClz"></i>
+                                <span>{{item.name}}</span>
+                            </template>
+                            <el-menu-item :index="index+'-'+idx" :route="child.path" 
+                                v-for="(child,idx) in item.children" :key="idx">{{child.name}}</el-menu-item>
+                        </el-submenu>
+                    </el-menu>
                 </el-aside>
                 <el-main>
                     <div style="overflow-y:auto; height:100%;">
@@ -84,17 +104,22 @@
                 isCollapse: false,
                 asideWidth: "206px",
                 collapseIconClass: 'el-icon-s-fold nav-collapse',
-                collapseIconStyle: {left: '176px'}
+                collapseIconStyle: {left: '176px'},
+                user: '',
+                routers: []
             };
         },
         created() {
-            this.getUsername()
+            this.getUsername();
+            this.getTreeMenus();
         },
         mounted() { },
         methods: {
             getUsername(){
                 var userinfo = window.sessionStorage.getItem("user");
-                this.username = userinfo !=null || userinfo != undefined ? JSON.parse(userinfo).username : '未登录';
+                var user = JSON.parse(userinfo)
+                this.username = userinfo !=null || userinfo != undefined ? user.username : '未登录';
+                this.user = user;
             },
             handleCommand(command){
                 if(command == 'logout'){
@@ -111,6 +136,15 @@
                         })  
                     })
                 }
+            },
+            getTreeMenus(){
+                var roleId = this.user.roles[0].id;
+                this.$get("/role/getTreeMenuByRoleId?roleId="+roleId).then(res => {
+                    if(res.data.status == 1){
+                        this.routers = res.data.data
+                        console.log(this.routers)
+                    }
+                })
             },
             setCollapse(){
                 this.isCollapse = !this.isCollapse;

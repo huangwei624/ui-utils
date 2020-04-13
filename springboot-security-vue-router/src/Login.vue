@@ -4,13 +4,13 @@
             <p style="text-align:center; font-size:22px; font-weight:blod">登录表单</p>
             <el-form ref="loginForm" :model="form">
                 <el-form-item>
-                    <el-input v-model="form.username" placeholder="请输入用户名"></el-input>
+                    <el-input v-model="form.username" placeholder="请输入用户名" @keyup.enter.native="login"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-input v-model="form.password" placeholder="请输入密码"></el-input>
+                    <el-input v-model="form.password" placeholder="请输入密码" @keyup.enter.native="login"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-input v-model="form.verifyCode"  placeholder="请输入验证码">
+                    <el-input v-model="form.verifyCode"  placeholder="请输入验证码" @keyup.enter.native="login">
                         <template slot="append">
                             <div style="background-color: white; margin-bottom: -2px; padding-left: 3px">
                                 <img  height="30px" width="80px" @click="getVerifyCode" :src="verifyCodeUrl" />
@@ -47,15 +47,8 @@
         mounted(){},
         methods: {
             login(){
-                // var loading= this.$loading({
-                //     lock: true,
-                //     text: '正在登录',
-                //     spinner: 'el-icon-loading',
-                //     background: 'rgba(0, 0, 0, 0.7)'
-                // });
                 this.$post("/login", this.$qs.stringify(this.form)).then(res => {
                     console.log(res)
-                    // loading.close();        // 关闭加载框
                     var status = res.data.status;
                     if(status == 1){
                         this.$message({type:'success', message: "登录成功"})
@@ -65,6 +58,8 @@
                     }else(
                         this.$message({type:'error', message: res.data.message})
                     )
+                },error => {
+                    this.$message({type:'error', message: "登录失败"})
                 })
             },
             getVerifyCode(){

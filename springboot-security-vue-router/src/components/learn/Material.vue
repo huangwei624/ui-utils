@@ -1,6 +1,6 @@
 <template>
     <div id='material'>
-        学生资料下载
+        资料下载
     </div>
 </template>
 

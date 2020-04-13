@@ -90,7 +90,7 @@
                     name: "全部",
                     children: []
                 }],
-                selectedMenus: [1, 2, 3]
+                selectedMenus: [1, 2, 3, 4, 5, 8, 9, 6, 10, 11, 12, 13, 7, 14, 15]
             }
         },
         created(){ 
